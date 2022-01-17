@@ -13,9 +13,9 @@ const ScanQr = () => {
         })();
     }, []);
 
-    const handleBarCodeScanned = ({ type, data }) => {
+    const handleBarCodeScanned = ({ data }) => {
         setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        alert(`${data}`);
     };
 
     if (hasPermission === null) {
@@ -31,7 +31,7 @@ const ScanQr = () => {
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
-            {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+            {scanned && <Button title={'Skenirajte ponovo'} onPress={() => setScanned(false)} />}
         </View>
     );
 };
