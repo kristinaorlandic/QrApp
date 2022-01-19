@@ -1,77 +1,136 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, TextInput, ScrollView, FlatList } from 'react-native';
-import { FullWindowOverlay } from 'react-native-screens';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, StatusBar } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import md5 from 'md5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginScreen = ({ navigation }) => {
 
+    const [username, setUsername] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+
+    const [loginError, setLoginError] = useState('');
+
+    const login = () => {
+
+        if (username != "" && password != "") {
+            fetch('https://api.tiramisuerp.com/api/prijava-preduzece', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'email': username,
+                    'password': md5(password)
+                })
+            }).then(res => res.json())
+                .then(resData => {
+                    if (resData.error != null) {
+                        setLoginError(resData.error);
+                    } else {
+                        setLoginError('');
+                        AsyncStorage.setItem("companies", JSON.stringify(resData.companies))
+                        AsyncStorage.setItem("token", JSON.stringify(resData.token))
+                        navigation.navigate('Preduzeće');
+                    }
+                })
+        }
+        if (username != "") {
+            setUsernameError('');
+        } else {
+            setUsernameError('Morate unijeti email!');
+        }
+
+        if (password != "") {
+            setPasswordError('');
+        } else {
+            setPasswordError('Morate unijeti lozinku!');
+        }
+    };
     return (
-        <View style={styles.view}>
-            <View>
-                <Image
-                    style={styles.image}
-                    source={require("../assets/logo.png")} />
+        <View style={styles.container}>
+            <Image style={styles.image} source={require("../assets/logo.png")} />
+            <StatusBar style="auto" />
+            <View style={styles.inputView}>
                 <TextInput
-                    style={styles.input}
-                    placeholder="Korisničko ime"
+                    style={styles.TextInput}
+                    placeholder="Email"
+                    value={username}
+                    onChangeText={(username) => setUsername(username)}
+                    onChange={() => setUsernameError('')}
                 />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Šifra"
-                />
-                <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate('Početna'); }}
-                >
-                    <Text style={styles.text}>Prijavi se</Text>
-                </TouchableOpacity >
             </View>
-        </View >
+            <Text style={styles.error}>{usernameError}</Text>
+
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.TextInput}
+
+                    placeholder="Lozinka"
+                    value={password}
+                    onChangeText={(password) => setPassword(password)}
+                    onChange={() => setPasswordError('')}
+                    secureTextEntry={true} />
+            </View>
+            <Text style={styles.error}>{passwordError}</Text>
+            <Text style={styles.error}>{loginError}</Text>
+
+            <TouchableOpacity style={styles.loginBtn}
+                onPress={login}>
+                <Text style={styles.loginText}>Prijavite se</Text>
+            </TouchableOpacity>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    view: {
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
         alignItems: "center",
-        width: '300',
     },
     image: {
-        marginTop: 30,
-        width: 400,
+        margin: 30,
+        width: 350,
         height: 80,
-        marginBottom: 50
     },
-    input: {
-        height: 40,
-        margin: 12,
-        borderWidth: 0.2,
-        padding: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 5,
-            height: 10,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3.84,
-    },
-    button: {
-        borderWidth: 0.2,
-        marginTop: 30,
-        paddingTop: 10,
-        backgroundColor: "lightgray",
-        height: 40,
+    inputView: {
+        backgroundColor: "#e0e0e0",
+        borderRadius: 5,
+        width: "90%",
+        height: 45,
+        marginTop: 10,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 5,
-            height: 10,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3.84,
-        marginHorizontal: 20
-
     },
-    list: {
-        marginTop: 30,
-    }
+
+    TextInput: {
+        height: 50,
+        flex: 1,
+        padding: 10,
+        marginLeft: 20,
+    },
+    loginBtn: {
+        width: "90%",
+        borderRadius: 5,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 20,
+        backgroundColor: "#aeaeae",
+        letterSpacing: 1,
+    },
+    error: {
+        fontSize: 12,
+        color: '#b71c1c',
+        fontWeight: 'bold',
+        paddingTop: 5
+    },
 });
 
 export default LoginScreen;

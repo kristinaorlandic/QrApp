@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
+
+
 const ScanQr = () => {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -16,6 +18,22 @@ const ScanQr = () => {
     const handleBarCodeScanned = ({ data }) => {
         setScanned(true);
         alert(`${data}`);
+
+        fetch('https://demo.tiramisuerp.com/qr_code/get_invoice.php', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer c01e33b9-21de-474c-b656-9674594d8896',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'qr_url': data,
+                'id': 1
+            })
+        }).then(response => response.json())
+            .then(response => { console.log(response) })
+
+
     };
 
     if (hasPermission === null) {
