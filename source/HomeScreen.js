@@ -11,11 +11,12 @@ const HomeScreen = ({ navigation }) => {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer c01e33b9-21de-474c-b656-9674594d8896',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 'qr_url': 'https://efitest.tax.gov.me/ic/#/verify?iic=6eabaa9d6b8c17610ff0c98fc1474553&tin=12345678&crtd=2021-07-29T11:27:07%2002:00&ord=19&bu=qg684ez801&cr=nm616du119&sw=cy617ua780&prc=230.72',
-                'id': 1
+                'id': 1,
+                'indicator': 1
             })
         }).then(res => res.text())
             .then(resData => {

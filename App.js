@@ -5,8 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './source/LoginScreen';
 import HomeScreen from './source/HomeScreen';
 import ScanQr from './source/ScanQr';
-import Company from './source/Company';
+import ChooseCompany from './Company/ChooseCompany';
 import Documents from './source/Documents';
+import Company from './source/Company';
 
 const Stack = createStackNavigator();
 
@@ -15,9 +16,9 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Prijava" component={LoginScreen} />
-        <Stack.Screen name="Dokumenta" component={Documents} />
-        <Stack.Screen name="Početna" component={HomeScreen} />
         <Stack.Screen name="Preduzeće" component={Company} />
+        <Stack.Screen name="Početna" component={HomeScreen} />
+        <Stack.Screen name="Dokumenta" component={Documents} />
         <Stack.Screen name="ScanQr" component={ScanQr} />
       </Stack.Navigator>
     </NavigationContainer>

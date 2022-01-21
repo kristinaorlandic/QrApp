@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, StatusBar, Picker } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, StatusBar, Picker } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Company = ({ navigation }) => {
+const ChooseCompany = ({ navigation }) => {
     const [selectedCompany, setSelectedCompany] = useState("");
     const [companyError, setCompanyError] = useState('');
 
@@ -17,47 +16,24 @@ const Company = ({ navigation }) => {
         }
     }
 
-    const [companiesArray, setCompaniesArray] = useState([]);
-
-    AsyncStorage.getItem("companies").then(data => {
-
-        const companiesDataJson = JSON.parse(data);
-        companiesDataJson.map(company => {
-            setCompaniesArray(oldArray => [...oldArray, company.id, company.naziv]);
-        });
-        alert(companiesArray);
-    }).catch(err => console.log(err));
-
-
-    AsyncStorage.getItem("token").then(data => {
-        if (data) {
-            let token = JSON.parse(data)
-        }
-    }).catch(err => console.log(err))
-
-
-
-
+    /*  AsyncStorage.getItem("companies").then(data => {
+          if (data) {
+              const companiesDataJson = JSON.parse(data);
+              alert(companiesDataJson.naziv)
+  
+          };
+  
+          AsyncStorage.getItem("token").then(data => {
+              if (data) {
+                  let token = JSON.parse(data)
+              }
+          }).catch(err => console.log(err))
+      };*/
     return (
         <View style={styles.container}>
             <Image style={styles.image} source={require("../assets/logo.png")} />
             <StatusBar style="auto" />
             <View style={styles.inputView}>
-                <View >
-                    <ul>
-                        {companiesArray.map(item =>
-                            <li key="{item.id}">{item.naziv}</li>
-                        )}
-                    </ul>
-
-                </View >
-                <Picker
-                    selectedValue={selectedCompany}
-                    style={styles.CompanyInput}
-                    onValueChange={(itemValue, itemIndex) => setSelectedCompany(itemValue)}
-                >
-                    <Picker.Item label="" value="" />
-                </Picker>
             </View>
             <Text style={styles.error}>{companyError}</Text>
 
@@ -111,4 +87,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Company;
+export default ChooseCompany;
