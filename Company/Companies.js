@@ -4,26 +4,22 @@ import { View, Text, FlatList } from 'react-native-web';
 
 
 
-const Companies = () => {
-    const [companiesArray, setCompaniesArray] = useState([]);
+const Companies = ({ navigation }) => {
+    /*  const [companiesArray, setCompaniesArray] = useState([]);
+  
+      AsyncStorage.getItem("companies").then(data => {
+          if (data) {
+              const companiesDataJson = JSON.parse(data);
+              companiesDataJson.map(company => {
+                  setCompaniesArray(oldArray => [...oldArray, company.naziv]);
+              });
+          }
+          alert(companiesArray);
+      }).catch(err => console.log(err));*/
 
-    AsyncStorage.getItem("companies").then(data => {
-        if (data) {
-            const companiesDataJson = JSON.parse(data);
-            companiesDataJson.map(company => {
-                setCompaniesArray(oldArray => [...oldArray, company.naziv]);
-            });
-        }
-        alert(companiesArray);
-    }).catch(err => console.log(err));
 
     return (<View >
-        <ul>
-            {companiesArray.map(item =>
-                <li key="{item}">{item}</li>
-            )}
-        </ul>
-
+        {JSON.stringify(navigation.getParam('form', 'naziv'))}
     </View >);
 };
 

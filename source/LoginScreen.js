@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, StatusBar } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import md5 from 'md5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import axios from 'axios';
 
 const LoginScreen = ({ navigation }) => {
 
@@ -13,33 +14,57 @@ const LoginScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
-
     const [loginError, setLoginError] = useState('');
+
+    const [companiesArray, setCompaniesArray] = useState([]);
 
     const login = () => {
 
         if (username != "" && password != "") {
-            fetch('https://api.tiramisuerp.com/api/prijava-preduzece', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
+            /*  await fetch('https://api.tiramisuerp.com/api/prijava-preduzece', {
+                  method: 'POST',
+                  headers: {
+                      'Accept': 'application/json',
+                      'Content-type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      'email': username,
+                      'password': md5(password)
+                  })
+              }).then(res => res.json())
+                  .then(resData => {
+                      if (resData.error != null) {
+                          setLoginError(resData.error);
+                      } else {
+                          setLoginError('');
+                          AsyncStorage.setItem("companies", JSON.stringify(resData.companies))
+                          AsyncStorage.setItem("token", JSON.stringify(resData.token))
+                            navigation.navigate('Preduzeće');
+                      }
+                  })*/
+
+            axios.post('https://api.tiramisuerp.com/api/prijava-preduzece',
+                {
                     'email': username,
                     'password': md5(password)
-                })
-            }).then(res => res.json())
-                .then(resData => {
-                    if (resData.error != null) {
-                        setLoginError(resData.error);
-                    } else {
-                        setLoginError('');
-                        AsyncStorage.setItem("companies", JSON.stringify(resData.companies))
-                        AsyncStorage.setItem("token", JSON.stringify(resData.token))
-                        navigation.navigate('Preduzeće');
+
+                }).then(
+                    (response) => {
+                        console.log(response)
+                        if (response.status === 200) {
+                            console.log("Login successful");
+                            setLoginError('');
+                            AsyncStorage.setItem("companies", JSON.stringify(response.data.companies))
+                            AsyncStorage.setItem("token", JSON.stringify(response.data.token))
+                            navigation.navigate('Preduzeće')
+                        } else {
+                            setLoginError(response.error);
+                        }
+
+                    }, (err) => {
+                        console.log('Could not establish connection');
                     }
-                })
+                );
         }
         if (username != "") {
             setUsernameError('');
@@ -85,6 +110,7 @@ const LoginScreen = ({ navigation }) => {
                 onPress={login}>
                 <Text style={styles.loginText}>Prijavite se</Text>
             </TouchableOpacity>
+
         </View>
     );
 };

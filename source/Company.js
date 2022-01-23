@@ -20,21 +20,12 @@ const Company = ({ navigation }) => {
     const [companiesArray, setCompaniesArray] = useState([]);
 
     AsyncStorage.getItem("companies").then(data => {
-
         const companiesDataJson = JSON.parse(data);
-        companiesDataJson.map(company => {
-            setCompaniesArray(oldArray => [...oldArray, company.id, company.naziv]);
-        });
-        alert(companiesArray);
+        /* companiesDataJson.map(company => {
+             setCompaniesArray(oldArray => [...oldArray, company.id, company.naziv]);
+         });*/
+        alert(companiesDataJson);
     }).catch(err => console.log(err));
-
-
-    AsyncStorage.getItem("token").then(data => {
-        if (data) {
-            let token = JSON.parse(data)
-        }
-    }).catch(err => console.log(err))
-
 
 
 
@@ -43,6 +34,7 @@ const Company = ({ navigation }) => {
             <Image style={styles.image} source={require("../assets/logo.png")} />
             <StatusBar style="auto" />
             <View style={styles.inputView}>
+
                 <View >
                     <ul>
                         {companiesArray.map(item =>
