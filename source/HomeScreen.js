@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native';
 import axios from 'axios';
 
 const HomeScreen = ({ navigation }) => {
@@ -15,7 +15,7 @@ const HomeScreen = ({ navigation }) => {
             headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer c01e33b9-21de-474c-b656-9674594d8896',
-                'Content-Type': 'application/json',
+
             }
         }).then(
             (response) => {
@@ -43,11 +43,14 @@ const HomeScreen = ({ navigation }) => {
                     source={require("../assets/qr-code.png")} />
                 <Text style={styles.text}>Skenirajte QR kod</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} >
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => { navigation.navigate('Dokumenta'); }}
+            >
                 <Image
                     style={styles.image}
                     source={require("../assets/file.png")} />
-                <Text style={styles.text}>DMS</Text>
+                <Text style={styles.text}>Skenirana dokumenta</Text>
             </TouchableOpacity >
 
         </View >
@@ -74,19 +77,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#e0e0e0",
         borderRadius: 5,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 5,
-            height: 10,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3.84,
-
+        textAlign: "center"
     },
     text: {
         fontSize: 15,
         fontWeight: "bold",
-        paddingTop: 30
+        paddingTop: 30,
     }
 });
 

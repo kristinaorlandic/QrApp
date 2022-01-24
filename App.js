@@ -8,12 +8,15 @@ import ScanQr from './source/ScanQr';
 import Documents from './source/Documents';
 import Company from './source/Company';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+
         <Stack.Screen name="Prijava" component={LoginScreen} />
         <Stack.Screen name="Preduzeće" component={Company} />
         <Stack.Screen name="Početna" component={HomeScreen} />

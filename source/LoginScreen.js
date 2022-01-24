@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const LoginScreen = ({ navigation }) => {
-
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');
 
@@ -18,53 +17,33 @@ const LoginScreen = ({ navigation }) => {
 
     const [companiesArray, setCompaniesArray] = useState([]);
 
-    const login = () => {
+    const login = async () => {
 
         if (username != "" && password != "") {
-            /*  await fetch('https://api.tiramisuerp.com/api/prijava-preduzece', {
-                  method: 'POST',
-                  headers: {
-                      'Accept': 'application/json',
-                      'Content-type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                      'email': username,
-                      'password': md5(password)
-                  })
-              }).then(res => res.json())
-                  .then(resData => {
-                      if (resData.error != null) {
-                          setLoginError(resData.error);
-                      } else {
-                          setLoginError('');
-                          AsyncStorage.setItem("companies", JSON.stringify(resData.companies))
-                          AsyncStorage.setItem("token", JSON.stringify(resData.token))
-                            navigation.navigate('Preduzeće');
-                      }
-                  })*/
+            try {
+                await axios.post('https://api.tiramisuerp.com/api/prijava-preduzece',
+                    {
+                        'email': username,
+                        'password': md5(password)
 
-            axios.post('https://api.tiramisuerp.com/api/prijava-preduzece',
-                {
-                    'email': username,
-                    'password': md5(password)
-
-                }).then(
-                    (response) => {
-                        console.log(response)
-                        if (response.status === 200) {
-                            console.log("Login successful");
-                            setLoginError('');
-                            AsyncStorage.setItem("companies", JSON.stringify(response.data.companies))
-                            AsyncStorage.setItem("token", JSON.stringify(response.data.token))
-                            navigation.navigate('Preduzeće')
-                        } else {
-                            setLoginError(response.error);
+                    }).then(
+                        (response) => {
+                            if (response.status === 200) {
+                                console.log("Login successful");
+                                setLoginError('');
+                                AsyncStorage.setItem("companies", JSON.stringify(response.data.companies))
+                                AsyncStorage.setItem("token", JSON.stringify(response.data.token))
+                                navigation.navigate('Preduzeće')
+                            }
                         }
+                    );
+            } catch (error) {
+                if (error.response) {
+                    console.log(error.response.status)
+                    setLoginError(error.response.data.error)
+                }
+            }
 
-                    }, (err) => {
-                        console.log('Could not establish connection');
-                    }
-                );
         }
         if (username != "") {
             setUsernameError('');
